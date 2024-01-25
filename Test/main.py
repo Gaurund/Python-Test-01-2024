@@ -1,18 +1,6 @@
 import argparse
 import logging
 
-logging.basicConfig(level=logging.NOTSET)
-logger = logging.getLogger(__name__)
-handler_error = logging.FileHandler("error.log", encoding="utf-8")
-handler_error.setLevel(logging.NOTSET)
-logger.addHandler(handler_error)
-
-parser = argparse.ArgumentParser(prog='Triangle',
-                                 description='Приложение принимает три целых числа и проверяет можно ли из отрезков '
-                                             'такой длинны составить треугольник.')
-parser.add_argument('numbers', metavar='N', type=str, nargs='*', help='Введите три целых числа.')
-args = parser.parse_args()
-
 
 def triangle(*nums):
     a, b, c = nums
@@ -50,6 +38,17 @@ def convert_list_to_int(str_list):
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.NOTSET)
+    logger = logging.getLogger(__name__)
+    handler_error = logging.FileHandler("error.log", encoding="utf-8")
+    handler_error.setLevel(logging.NOTSET)
+    logger.addHandler(handler_error)
+
+    parser = argparse.ArgumentParser(prog='Triangle',
+                                     description='Приложение принимает три целых числа и проверяет можно ли из отрезков '
+                                                 'такой длинны составить треугольник.')
+    parser.add_argument('numbers', metavar='N', type=str, nargs='*', help='Введите три целых числа.')
+    args = parser.parse_args()
     values = convert_list_to_int(args.numbers)
     values = check_amount(values)
     triangle(*values)
