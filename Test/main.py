@@ -8,13 +8,14 @@ handler_error.setLevel(logging.NOTSET)
 logger.addHandler(handler_error)
 
 parser = argparse.ArgumentParser(prog='Triangle',
-                                 description='Validate ability of the lines to render a triangle ',
-                                 epilog='Returns a notification')
-parser.add_argument('numbers', metavar='N', type=str, nargs='*', help='type in some numbers')
+                                 description='Приложение принимает три целых числа и проверяет можно ли из отрезков '
+                                             'такой длинны составить треугольник.')
+parser.add_argument('numbers', metavar='N', type=str, nargs='*', help='Введите три целых числа.')
 args = parser.parse_args()
 
 
-def triangle(a, b, c):
+def triangle(*nums):
+    a, b, c = nums
     if a + b > c and a + c > b and b + c > a:
         print("Треугольник существует", end=" ")
         if a == b == c:
@@ -27,19 +28,28 @@ def triangle(a, b, c):
         print("Треугольник не существует")
 
 
-def check_amount():
-    try:
-        a, b, c = args.numbers
-    except Exception as e:
-        # logger.critical(e)
-        if len(args.numbers) > 2:
-            logger.critical("Слишком много параметров. Чисел должно быть три.")
-        else:
-            logger.critical("Недостаточно параметров. Чисел должно быть три.")
-        a = b = c = 0
-    return a, b, c
+def check_amount(vals):
+    if len(vals) > 3:
+        logger.critical("Слишком много параметров. Чисел должно быть три. Но мы удалим лишние за вас.")
+        return vals[:3:]
+    elif len(vals) < 3:
+        logger.critical("Недостаточно параметров. Чисел должно быть три.")
+        return 0, 0, 0
+    return vals
 
 
-values = check_amount()
+def convert_list_to_int(str_list):
+    num_list = list()
+    for e in str_list:
+        try:
+            num_list.append(int(e))
+        except Exception:
+            logger.critical("Следует вводить только целые числа!")
 
-triangle(x, y, z)
+    return num_list
+
+
+if __name__ == '__main__':
+    values = convert_list_to_int(args.numbers)
+    values = check_amount(values)
+    triangle(*values)
